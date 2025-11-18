@@ -10,6 +10,9 @@ tags:
   - name: Read Pets
     description: Retrieve the properties of one-or-more pets based on the requested URL
 
+security:
+  - apiKey: []
+
 paths:
   /pets:
     get:
@@ -33,7 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-                
+
 components:
   schemas:
     Pet:
@@ -59,3 +62,9 @@ components:
           format: int32
         message:
           type: string
+  securitySchemes:
+    apiKey:
+      description: API key as provided in Petstore portal
+      type: apiKey
+      in: header
+      name: api-key
