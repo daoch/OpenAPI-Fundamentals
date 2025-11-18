@@ -7,8 +7,12 @@ info:
 tags:
   - name: GET
     description: HTTP GET operations
-  - name: Read Pets
-    description: Retrieve the properties of one-or-more pets based on the requested URL
+  - name: POST
+    description: HTTP POST operations
+  - name: Read
+    description: Retrieve the properties of one-or-more Pets
+  - name: Write
+    description: Create or update a Pet
 
 security:
   - apiKey: []
@@ -16,10 +20,12 @@ security:
 paths:
   /pets:
     get:
-      summary: List of pets
+      summary: Retrieve all Pets
+      description: Retrieve all Pets in the collection
+      operationId: GetAllPets
       tags:
-        - GET
-        - Read Pets
+      - GET
+      - Read
       responses:
         "200":
           description: List of pets provided at the Petstore
@@ -36,31 +42,95 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+    post:
+      summary: Create a Pet
+      description: Add a new Pet to the collection
+      operationId: CreatePet
+      tags:
+      - POST
+      - Write
+      requestBody:
+        description: New Pet properties
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+               - name
+              properties:
+                name:
+                  $ref: '#/components/schemas/PetName'
+                type:
+                  $ref: '#/components/schemas/PetType'
+      responses:
+        "201":
+          description: New Pet properties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: Non-specific HTTP response code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{petId}:
+    get:
+      summary: Retrieve a Pet
+      description: Retrieve a Pet from the collection
+      operationId: GetAPet
+      tags:
+        - GET
+        - Read
+      responses:
+        "200":
+          description: Properties of Pet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: Non-specific HTTP response code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
+    PetName:
+      description: The name of the Pet
+      type: string
+    PetType:
+      description: The category of the Pet
+      type: string
     Pet:
+      description: Properties of a Pet
       type: object
       required:
         - id
         - name
       properties:
         id:
+          description: The unique identifier for a Pet
           type: integer
           format: int64
         name:
-          type: string
+          $ref: '#/components/schemas/PetName'
         tag:
-          type: string
+          $ref: '#/components/schemas/PetType'
     Error:
+      description: An error object. Provides a code identifying the error and optional message
       type: object
       required:
         - code
       properties:
         code:
+          description: The error code. Defined separately to the HTTP response code
           type: integer
           format: int32
         message:
+          description: An optional error message provide more detailed information for humans
           type: string
   securitySchemes:
     apiKey:
