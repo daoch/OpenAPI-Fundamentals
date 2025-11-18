@@ -3,10 +3,20 @@ info:
   title: OpenAPI v3.1 Fundamentals API
   description: A stripped-down version of the Petstore API for the OpenAPI v3.1 Fundamentals course.
   version: 1.0.0
+
+tags:
+  - name: GET
+    description: HTTP GET operations
+  - name: Read Pets
+    description: Retrieve the properties of one-or-more pets based on the requested URL
+
 paths:
   /pets:
     get:
       summary: List of pets
+      tags:
+        - GET
+        - Read Pets
       responses:
         "200":
           description: List of pets provided at the Petstore
@@ -23,6 +33,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+                
 components:
   schemas:
     Pet:
